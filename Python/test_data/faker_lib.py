@@ -27,3 +27,10 @@ class DataCreatorFake:
 
     def create_phone_number(self):
         from faker.providers.phone_number import Provider
+
+        return Provider('uk_UA').phone_number()
+
+    def create_email(self):
+        from faker.providers.internet import Provider
+
+        return Provider('uk_UA').email()
