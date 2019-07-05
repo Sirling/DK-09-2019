@@ -1,6 +1,7 @@
 import threading
 from queue import Queue
 from threads_part.tests_collection import Collection
+from threads_part.test_results import results
 
 
 class TestRunner(threading.Thread):
@@ -23,8 +24,15 @@ class TestRunner(threading.Thread):
             self.queue.task_done()
 
     def execute(self, test):
-
-        test()
+        self.test_results = []
+        try:
+            test()
+            results.append("Test {} passed!")
+            self.test_results.append("Test {} passed!")
+        except AssertionError:
+            self.test_results.append("Test {} failed!")
+            results.append("Test {} failed!")
+            self.queue.task_done()
 
 
 def main(test_methods, threads_qtt):
@@ -41,7 +49,8 @@ def main(test_methods, threads_qtt):
         queue.put(test)
 
     queue.join()
+    print()
 
 if __name__ == "__main__":
-    test_methods = Collection().govnokod_1
+    test_methods = Collection().methods
     main(test_methods=test_methods, threads_qtt=4)
