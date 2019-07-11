@@ -1,4 +1,5 @@
 import threading
+import time
 from queue import Queue
 from threads_part.tests_collection import Collection
 from threads_part.test_results import results
@@ -16,41 +17,47 @@ class TestRunner(threading.Thread):
         :return:
         """
         while True:
-            # Получение теста из очереди
-            test = self.queue.get()
-            # Запуск теста
-            self.execute(test)
-            # Сигнал о завершении теста
-            self.queue.task_done()
 
-    def execute(self, test):
-        self.test_results = []
+            test = self.queue.get()     # Получение теста из очереди
+            if test is None:
+                break                   # Прерывает выполнение потока, если получен нул
+            self.execute_test(test)     # Запуск теста
+            self.queue.task_done()      # Сигнал о завершении теста
+
+    def execute_test(self, test):
         try:
-            test()
-            results.append("Test {} passed!")
-            self.test_results.append("Test {} passed!")
+            test()                                  # Вызов тестового метода
+            results.append("{} passed!"
+                           .format(test.__name__))  # Запись успешно прошедшего теста
         except AssertionError:
-            self.test_results.append("Test {} failed!")
-            results.append("Test {} failed!")
-            self.queue.task_done()
+            results.append("{} failed!"
+                           .format(test.__name__))  # Запись проваленого теста
+            pass
 
 
 def main(test_methods, threads_qtt):
 
-    queue = Queue()
+    queue = Queue()                     # Создание очереди
+    threads = []                        # Массив потоков
+    for i in range(threads_qtt):        # Цикл запуска регулируемого количества потоков
+        t = TestRunner(queue)           # Создание потока со списком
+        t.start()                       # Запуск очереди
+        threads.append(t)               # Добавление запущеного потока в массив
+
+    for test in test_methods:           #
+        queue.put(test)                 # Заполнение очереди тестовыми методами
+
+    queue.join()                        # Ожидание очереди выполнения задач
 
     for i in range(threads_qtt):
+        queue.put(None)                 # Заполнение очереди Нулами для остановки потоков
+    for thread in threads:
+        thread.join()                   # Ожидание каждого потока выполнения в нем задач (закрытие потока)
+    print(results)
 
-        tr = TestRunner(queue)
-        tr.setDaemon(True)
-        tr.start()
-
-    for test in test_methods:
-        queue.put(test)
-
-    queue.join()
-    print()
 
 if __name__ == "__main__":
-    test_methods = Collection().methods
-    main(test_methods=test_methods, threads_qtt=4)
+    tests_to_run = Collection().methods # Создание списка всех методов
+    start = time.time()
+    main(test_methods=tests_to_run, threads_qtt=2)
+    print(time.time() - start)
