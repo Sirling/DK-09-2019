@@ -1,8 +1,8 @@
 import threading
 import time
 from queue import Queue
-from threads_part.tests_collection import Collection
-from threads_part.test_results import results
+from Python.threads_part.tests_collection import Collection
+from Python.threads_part.test_results import results
 
 
 class TestRunner(threading.Thread):
