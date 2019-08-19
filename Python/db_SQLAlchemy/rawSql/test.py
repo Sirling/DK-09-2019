@@ -1,5 +1,5 @@
-from queries_task.cursor import Database
-from queries_task import queries
+from Python.db_SQLAlchemy.rawSql.cursor import Database
+from Python.db_SQLAlchemy.rawSql import queries
 
 
 def dk():

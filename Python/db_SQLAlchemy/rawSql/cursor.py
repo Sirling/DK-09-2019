@@ -1,7 +1,7 @@
 import mysql.connector
+from Python.db_SQLAlchemy.pwrd.pwrd import password
 
-from Python.db_SQLAlchemy.pwrd import pwrd
-
+print(mysql.connector.version.VERSION)
 
 class Database:
 
@@ -13,7 +13,8 @@ class Database:
                                              database=database,
                                              port=3306,
                                              user='a-b.shvets',
-                                             password=pwrd.password
+                                             password=password
+
                                              )
         return connection
 
@@ -23,14 +24,13 @@ class Database:
         try:
             cursor.execute(query)
             result = cursor.fetchall()                                                                                                                                                          
-            result_list = list(sum(result, ()))
-            print(result_list)
+            for row in result:
+                print(row)
         except mysql.connector.Error as error:
             print(error)
         finally:
             if connect.is_connected():
                 cursor.close()
-
 
     def update(self, query):
         connect = self.connect()
