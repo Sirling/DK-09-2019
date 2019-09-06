@@ -5,7 +5,7 @@ from Python.test_data.driver import Driver
 class BaseTest(ABC):
 
     def __init__(self):
-        self.driver = Driver()
+        self.driver = Driver().driver
 
     @abstractmethod
     def preconditions(self):

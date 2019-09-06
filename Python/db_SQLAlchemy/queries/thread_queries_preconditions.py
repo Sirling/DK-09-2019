@@ -20,5 +20,6 @@ class Insert:
 
     def ins_vacancy(self):
 
-        session.execute()
+        from Python.db_SQLAlchemy.queries.queries_data import nescafe_vacancy
+        session.execute(HRVacancies.insert().values(nescafe_vacancy))
 
