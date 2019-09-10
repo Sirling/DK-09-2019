@@ -63,6 +63,15 @@ class Action(Base):
     stores = relationship('Store', secondary='campaign_store')
 
 
+class AdditionalMenu(Base):
+    __tablename__ = 'additional_menu'
+
+    id = Column(INTEGER(11), primary_key=True)
+    title = Column(String(250, 'utf8_unicode_ci'), nullable=False)
+    subdomain = Column(String(250, 'utf8_unicode_ci'), nullable=False)
+    path = Column(String(250, 'utf8_unicode_ci'), nullable=False)
+
+
 class AdminRole(Base):
     __tablename__ = 'admin_roles'
 
@@ -110,7 +119,6 @@ class Appeal(Base):
     is_feedback = Column(TINYINT(1), nullable=False)
     created_at = Column(DateTime, nullable=False)
     updated_at = Column(DateTime, nullable=False)
-    is_kantin = Column(TINYINT(1), nullable=False)
 
     problem = relationship('Problem')
     store = relationship('Store')
@@ -292,7 +300,7 @@ class Cv(Base):
     birthday = Column(String(255, 'utf8_unicode_ci'), nullable=False)
     email = Column(String(255, 'utf8_unicode_ci'), nullable=False)
     phone = Column(String(255, 'utf8_unicode_ci'), nullable=False)
-    link = Column(String(255, 'utf8_unicode_ci'))
+    link = Column(String(1000, 'utf8_unicode_ci'))
     stores = Column(String(255, 'utf8_unicode_ci'))
     position = Column(String(255, 'utf8_unicode_ci'))
     work_time = Column(String(255, 'utf8_unicode_ci'))
@@ -859,6 +867,19 @@ class Label(Base):
     icon = relationship('File')
 
 
+class Link(Base):
+    __tablename__ = 'link'
+
+    id = Column(INTEGER(11), primary_key=True)
+    additional_menu_id = Column(ForeignKey('additional_menu.id'), index=True)
+    title = Column(String(250, 'utf8_unicode_ci'), nullable=False)
+    path = Column(String(250, 'utf8_unicode_ci'), nullable=False)
+    tag_ga = Column(String(250, 'utf8_unicode_ci'))
+    position = Column(SMALLINT(6))
+
+    additional_menu = relationship('AdditionalMenu')
+
+
 class Log(Base):
     __tablename__ = 'log'
 
@@ -903,6 +924,16 @@ class MemberQuestion(Base):
     answer = Column(String(255, 'utf8_unicode_ci'), nullable=False)
     question_id = Column(String(255, 'utf8_unicode_ci'), nullable=False)
     requested_at = Column(DateTime, nullable=False)
+
+
+class Menu(Base):
+    __tablename__ = 'menu'
+
+    id = Column(INTEGER(11), primary_key=True)
+    title = Column(String(250, 'utf8_unicode_ci'), nullable=False)
+    path = Column(String(250, 'utf8_unicode_ci'), nullable=False)
+    tag_ga = Column(String(250, 'utf8_unicode_ci'))
+    position = Column(SMALLINT(6))
 
 
 class MigrationVersion(Base):
@@ -1381,22 +1412,8 @@ class SkuLagerInfo(Base):
     price = Column(String(255, 'utf8_unicode_ci'), nullable=False)
     photo_name = Column(String(255, 'utf8_unicode_ci'), nullable=False)
     kolvo_state = Column(INTEGER(11), nullable=False)
-    alcohol_content = Column(String(255, 'utf8_unicode_ci'))
-    ethno = Column(String(255, 'utf8_unicode_ci'))
-    type_of_product = Column(String(255, 'utf8_unicode_ci'))
-    country = Column(String(255, 'utf8_unicode_ci'))
-    trademark = Column(String(255, 'utf8_unicode_ci'))
-    manufacturer = Column(String(255, 'utf8_unicode_ci'))
-    bouquet_tone = Column(LONGTEXT)
-    serving_temperature = Column(String(255, 'utf8_unicode_ci'))
-    gastronomic_combination = Column(String(255, 'utf8_unicode_ci'))
-    gluten_free = Column(String(255, 'utf8_unicode_ci'))
-    advanced_recipe = Column(LONGTEXT)
-    vegan = Column(String(255, 'utf8_unicode_ci'))
-    wort_density = Column(String(255, 'utf8_unicode_ci'))
-    ibubitterness = Column(String(255, 'utf8_unicode_ci'))
-    style = Column(String(255, 'utf8_unicode_ci'))
-    style_eng = Column(String(255, 'utf8_unicode_ci'))
+    parameters = Column(LONGTEXT, nullable=False, comment='(DC2Type:json_array)')
+    group_id = Column(INTEGER(11), nullable=False)
 
     product = relationship('Product')
 
@@ -1473,6 +1490,21 @@ class StoreServiceMap(Base):
 
     service = relationship('StoreService')
     store = relationship('Store')
+
+
+class SubLink(Base):
+    __tablename__ = 'sub_link'
+
+    id = Column(INTEGER(11), primary_key=True)
+    menu_id = Column(ForeignKey('menu.id'), index=True)
+    link_id = Column(ForeignKey('link.id'), index=True)
+    title = Column(String(250, 'utf8_unicode_ci'), nullable=False)
+    path = Column(String(250, 'utf8_unicode_ci'), nullable=False)
+    tag_ga = Column(String(250, 'utf8_unicode_ci'))
+    position = Column(SMALLINT(6))
+
+    link = relationship('Link')
+    menu = relationship('Menu')
 
 
 class Succes(Base):

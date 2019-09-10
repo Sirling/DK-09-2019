@@ -9,11 +9,14 @@ class HRVacancies(Base):
 
     __table__ = Table('hr_vacancy', metadata, autoload=True)
 
+
 class DeleteFromTable:
 
     def del_vacancy_by_manager_name(self, name):
 
-        session.execute(HRVacancies.delete().where(HRVacancies.manager_name == '{}'.format(name)))
+        session.query(HRVacancies).filter(HRVacancies.manager_name == 'Nescafe').delete()
+        # session.commit()
+        # session.execute(HRVacancies.delete().where(HRVacancies.manager_name == '{}'.format(name)))
 
 
 class Insert:
