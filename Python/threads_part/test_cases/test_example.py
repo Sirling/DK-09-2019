@@ -5,8 +5,6 @@ from Python.threads_part.base_test import BaseTest
 
 
 class TestExample(BaseTest):
-    # def __init__(self):
-    #     super(TestExample, self).__init__()
 
     def preconditions(self):
         DeleteFromTable().del_vacancy_by_manager_name("Nescafe")
@@ -28,7 +26,7 @@ class TestExample(BaseTest):
         for vacancy in vacancies_list:
             if vacancy.text == 'Администратор':
                 vacancy.click()
-        qtt_of_vacancies = self.driver.find_elements(By.CLASS_NAME, 'vacancies-list-item-wrapper')
+        qtt_of_vacancies = len(self.driver.find_elements(By.CLASS_NAME, 'vacancies-list-item-wrapper'))
 
         assert qtt_of_vacancies > 0
 
