@@ -1414,6 +1414,7 @@ class SkuLagerInfo(Base):
     kolvo_state = Column(INTEGER(11), nullable=False)
     parameters = Column(LONGTEXT, nullable=False, comment='(DC2Type:json_array)')
     group_id = Column(INTEGER(11), nullable=False)
+    labels = Column(LONGTEXT, nullable=False, comment='(DC2Type:json_array)')
 
     product = relationship('Product')
 

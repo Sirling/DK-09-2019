@@ -14,7 +14,6 @@ class TestRunner(threading.Thread):
     def run(self):
         """
         Запуск потока
-        :return:
         """
         while True:
 
@@ -57,7 +56,7 @@ def main(test_methods, threads_qtt):
 
 
 if __name__ == "__main__":
-    tests_to_run = Collection().methods # Создание списка всех методов
+    tests_to_run = Collection().methods  # Создание списка всех методов
     start = time.time()
     main(test_methods=tests_to_run, threads_qtt=2)
     print(time.time() - start)

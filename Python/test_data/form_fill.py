@@ -3,6 +3,7 @@ from time import sleep
 from Python.test_data import driver_container
 from Python.test_data.test_form_cv import Form
 
+
 class TestFillForm:
 
     def setup(self):
@@ -16,8 +17,9 @@ class TestFillForm:
         self.driver.get('https://newsilpo.iir.fozzy.lan/work/info/storinka-ambassadora')
 
         form = Form()
+
         form.open_form()
-        # form.fill_name()
+        form.fill_name()
         form.fill_adress()
         form.fill_birthday()
         form.fill_phone()
