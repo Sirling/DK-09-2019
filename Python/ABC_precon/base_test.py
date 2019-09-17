@@ -5,6 +5,7 @@ from Python.test_data.driver_container import driver
 
 class BaseTest(ABC):
 
+    driver = driver
     # кастомный вейт
     wait = WebDriverWait(driver, 5)
 

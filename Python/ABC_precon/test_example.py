@@ -39,7 +39,8 @@ class TestExample(BaseTest):
                 vacancy.click()
                 break
         # Подсет количества отображенных вакансий
-        qtt_of_vacancies = len(self.wait.until(EC.presence_of_all_elements_located((By.CLASS_NAME, 'vacancies-list-item-wrapper'))))
+        qtt_of_vacancies = len(self.wait.until(EC.presence_of_all_elements_located((By.CLASS_NAME, 'vacancies-list'
+                                                                                                   '-item-wrapper'))))
         print(qtt_of_vacancies)
         assert qtt_of_vacancies > 0, "Список вакансий пуст"
 

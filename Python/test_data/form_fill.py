@@ -1,5 +1,4 @@
 from time import sleep
-
 from Python.test_data import driver_container
 from Python.test_data.test_form_cv import Form
 
