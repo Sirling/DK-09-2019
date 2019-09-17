@@ -1,36 +1,37 @@
+import datetime
+from faker import Faker
+
+from Python.test_data.phone_number_generator.mobile_phone import create_mobile_phone
+
+
 class DataCreatorFake:
 
     def create_text(self, quantity):
-        from faker import Faker
         return Faker('uk_UA').text(quantity)
 
     def create_name(self, name_type):
-        from faker.providers.person import Provider
 
-        self.person_provider = Provider('uk_UA')
+        provider = Faker('uk_UA')
         if name_type == 'first':
-            return self.person_provider.first_name()
+            return provider.first_name()
         elif name_type == 'second':
-            return self.person_provider.last_name()
+            return provider.last_name()
         elif name_type == 'full':
-            return self.person_provider.name()
+            return provider.name()
 
     def create_address(self):
-        from faker.providers.address import Provider
 
-        return Provider('uk_UA').address()
+        return Faker('uk_UA').address()
 
     def create_birth_date(self):
-        from faker.providers.date_time import Provider
 
-        return Provider("uk_UA").date_of_birth(minimum_age=18, maximum_age=25)
+        birthday = str(Faker("uk_UA").date_of_birth(minimum_age=18, maximum_age=25))
+        return datetime.datetime.strptime(birthday, '%Y-%m-%d').strftime('%d/%m/%Y')
 
     def create_phone_number(self):
-        from faker.providers.phone_number import Provider
 
-        return Provider('uk_UA').phone_number()
+        return create_mobile_phone()
 
     def create_email(self):
-        from faker.providers.internet import Provider
 
-        return Provider('uk_UA').email()
+        return Faker('uk_UA').email()
