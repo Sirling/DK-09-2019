@@ -22,7 +22,7 @@ pycparser==2.19
 PyMySQL==0.9.3
 pytest==4.5.0
 python-dateutil==2.8.0
-selenium==3.141.0
+selenium
 six==1.12.0
 sqlacodegen==2.1.0
 SQLAlchemy==1.3.5

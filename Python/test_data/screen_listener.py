@@ -1,7 +1,5 @@
 from selenium.webdriver.support.events import AbstractEventListener
 
-from Python.test_data.driver_container import driver
-
 
 class ScreenshotListener(AbstractEventListener):
 
