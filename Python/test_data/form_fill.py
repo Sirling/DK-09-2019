@@ -36,5 +36,5 @@ class TestFillForm:
         form.fill_grade()
         sleep(1)
         form.fill_reason()
-        sleep(2)
+        sleep(3)
         assert form.is_submit_btn_active()

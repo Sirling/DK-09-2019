@@ -1,3 +1,5 @@
+from time import sleep
+
 from selenium.webdriver.common.by import By
 from Python.test_data.driver_container import driver, wait
 from Python.test_data.faker_lib import DataCreatorFake
@@ -11,6 +13,7 @@ class Form:
 
         form_button = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, 'button[class*="btn-proceed"]')))
         driver.execute_script("return arguments[0].scrollIntoView();", form_button)
+        sleep(5)
         form_button.click()
         return self
 

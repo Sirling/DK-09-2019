@@ -50,6 +50,7 @@ class Action(Base):
     common = Column(TINYINT(1), nullable=False)
     label_icon_pdf_id = Column(ForeignKey('file.id', ondelete='SET NULL'), index=True)
     promoBlock_id = Column(ForeignKey('promo.id'), index=True)
+    promoBlockMedia_id = Column(ForeignKey('promo.id'), index=True)
 
     application = relationship('Qrlink')
     content_image = relationship('File', primaryjoin='Action.content_image_id == File.id')
@@ -58,6 +59,7 @@ class Action(Base):
     label_icon_pdf = relationship('File', primaryjoin='Action.label_icon_pdf_id == File.id')
     label_icon_reversed = relationship('File', primaryjoin='Action.label_icon_reversed_id == File.id')
     preview_image = relationship('File', primaryjoin='Action.preview_image_id == File.id')
+    promoBlockMedia = relationship('Promo', primaryjoin='Action.promoBlockMedia_id == Promo.id')
     promoBlock = relationship('Promo', primaryjoin='Action.promoBlock_id == Promo.id')
     promo = relationship('Action', remote_side=[id])
     stores = relationship('Store', secondary='campaign_store')
@@ -701,6 +703,7 @@ class HrPage(Base):
     ambasador_emails = Column(String(255, 'utf8_unicode_ci'))
     vacancy_title = Column(String(255, 'utf8_unicode_ci'))
     video = Column(String(255, 'utf8_unicode_ci'))
+    advantages_title = Column(String(255, 'utf8_unicode_ci'), nullable=False)
 
     body_image = relationship('File', primaryjoin='HrPage.body_image_id == File.id')
     header_icon = relationship('File', primaryjoin='HrPage.header_icon_id == File.id')
@@ -808,7 +811,7 @@ class HrVacancy(Base):
     employment = Column(SMALLINT(6), nullable=False)
     is_published = Column(TINYINT(1), nullable=False)
     is_experienced = Column(TINYINT(1), nullable=False)
-    contact_one = Column(String(255, 'utf8_unicode_ci'), nullable=False)
+    contact_one = Column(String(255, 'utf8_unicode_ci'))
     contact_two = Column(String(255, 'utf8_unicode_ci'))
     manager_name = Column(String(255, 'utf8_unicode_ci'))
     reward = Column(String(255, 'utf8_unicode_ci'))
@@ -1173,8 +1176,8 @@ class PrivateUser(Base):
     __tablename__ = 'private_user'
 
     id = Column(INTEGER(11), primary_key=True)
-    firstName = Column(String(255, 'utf8_unicode_ci'), nullable=False)
-    lastName = Column(String(255, 'utf8_unicode_ci'), nullable=False)
+    firstName = Column(String(255, 'utf8_unicode_ci'))
+    lastName = Column(String(255, 'utf8_unicode_ci'))
     middleName = Column(String(255, 'utf8_unicode_ci'))
     email = Column(String(255, 'utf8_unicode_ci'))
     emailConfirmed = Column(TINYINT(1), nullable=False)
@@ -1188,6 +1191,10 @@ class PrivateUser(Base):
     barcode = Column(String(255, 'utf8_unicode_ci'))
     fullPhoneNumber = Column(String(255, 'utf8_unicode_ci'))
     balance = Column(INTEGER(11))
+    business_card_id = Column(INTEGER(11))
+    ticket_user_id = Column(ForeignKey('ticket_user.id'), unique=True)
+
+    ticket_user = relationship('TicketUser')
 
 
 class Problem(Base):
@@ -1561,6 +1568,7 @@ class TicketUser(Base):
     email = Column(String(255, 'utf8_unicode_ci'), unique=True)
     send_to_email = Column(TINYINT(1), nullable=False, server_default=text("'0'"))
     card = Column(String(255, 'utf8_unicode_ci'))
+    is_authorized = Column(TINYINT(1), nullable=False, server_default=text("'1'"))
 
 
 class UpdateFromFile(Base):
@@ -1610,6 +1618,7 @@ class Workflow(Base):
     loyalty_card = Column(String(13, 'utf8_unicode_ci'))
     registarte_data = Column(LONGTEXT, comment='(DC2Type:array)')
     access_email_id = Column(INTEGER(11))
+    business_card_id = Column(INTEGER(11))
 
 
 class Zone(Base):
