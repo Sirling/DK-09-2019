@@ -40,7 +40,7 @@ class Database:
             connect.commit()
 
         except mysql.connector.Error as error:
-            print("Failed to update record to database rollback: {}".format(error))
+            print("Failed to update record to DB rollback: {}".format(error))
             connect.rollback()
 
         finally:

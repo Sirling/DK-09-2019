@@ -57,6 +57,6 @@ def select_force_join():
         print(row)
 
 
-# select_product_and_store()  # короткий вариант
-# print("---------------------------------------------")
-# select_force_join()         # принудительный джоин
+select_product_and_store()  # короткий вариант
+print("---------------------------------------------")
+select_force_join()         # принудительный джоин
