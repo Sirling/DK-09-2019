@@ -1,0 +1,16 @@
+from selenium import webdriver
+
+
+class Driver:
+
+    def __init__(self):
+        options = webdriver.ChromeOptions()
+        options.add_argument('--start-maximized')
+        self.driver = webdriver.Chrome(executable_path='C:\\Users\\Shveps\\PycharmProjects\\DK-09-2019\\Python\\drivers\\chromedriver.exe',
+                                       chrome_options=options)
+
+    def close(self):
+        self.driver.close()
+
+    def quit(self):
+        self.driver.quit()
