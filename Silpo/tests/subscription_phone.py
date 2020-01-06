@@ -1,6 +1,7 @@
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 
+from Python.test_data.phone_number_generator.mobile_phone import create_mobile_phone
 from Silpo.src.back.DB.queries.Delete_queries.delete_by_phone import delete_phone
 from Silpo.src.back.DB.queries.Insert_queries.insert_phone import insert_phone
 from Silpo.test_suites.BaseTest import BaseTest
@@ -8,7 +9,7 @@ from Silpo.test_suites.BaseTest import BaseTest
 
 class ExistingPhone(BaseTest):
     event_to_find = 'Beermaster Day 2022 Beermaster'
-    phone_to_enter = '0930768886'
+    phone_to_enter = create_mobile_phone()
 
     def preconditions(self):
         """
