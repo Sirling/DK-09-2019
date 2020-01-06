@@ -51,6 +51,12 @@ class Action(Base):
     label_icon_pdf_id = Column(ForeignKey('file.id', ondelete='SET NULL'), index=True)
     promoBlock_id = Column(ForeignKey('promo.id'), index=True)
     promoBlockMedia_id = Column(ForeignKey('promo.id'), index=True)
+    advantage_description = Column(LONGTEXT)
+    advantage_title = Column(String(250, 'utf8_unicode_ci'))
+    conditions_title = Column(String(250, 'utf8_unicode_ci'))
+    subscription_title = Column(String(250, 'utf8_unicode_ci'))
+    subscription_button_title = Column(String(250, 'utf8_unicode_ci'))
+    subscription = Column(TINYINT(1))
 
     application = relationship('Qrlink')
     content_image = relationship('File', primaryjoin='Action.content_image_id == File.id')
@@ -99,6 +105,19 @@ t_admin_user_roles = Table(
     Column('id_user', ForeignKey('admin_user.id'), primary_key=True, nullable=False, index=True),
     Column('id_right', ForeignKey('admin_roles.id'), primary_key=True, nullable=False, index=True)
 )
+
+
+class Advantage(Base):
+    __tablename__ = 'advantages'
+
+    id = Column(INTEGER(11), primary_key=True)
+    icon_id = Column(ForeignKey('file.id', ondelete='SET NULL'), index=True)
+    campaign_id = Column(ForeignKey('action.id', ondelete='CASCADE'), index=True)
+    title = Column(String(255, 'utf8_unicode_ci'), nullable=False)
+    position = Column(SMALLINT(6))
+
+    campaign = relationship('Action')
+    icon = relationship('File')
 
 
 class Animal(Base):
@@ -172,8 +191,10 @@ class EvTicket(BaseProduct):
     mastercard_discount_type = Column(SMALLINT(6))
     mastercard_discount_description = Column(String(255, 'utf8_unicode_ci'))
     is_published = Column(TINYINT(1), nullable=False)
+    image_background_id = Column(ForeignKey('file.id', ondelete='SET NULL'), index=True)
 
     event = relationship('EvEvent')
+    image_background = relationship('File', primaryjoin='EvTicket.image_background_id == File.id')
     image = relationship('File', primaryjoin='EvTicket.image_id == File.id')
     preview = relationship('File', primaryjoin='EvTicket.preview_id == File.id')
     type = relationship('EvTicketType')
@@ -263,6 +284,21 @@ class CampaignProductVersion(Base):
     campaign_product = relationship('CampaignProduct')
 
 
+class CampaignReminder(Base):
+    __tablename__ = 'campaign_reminder'
+    __table_args__ = (
+        Index('UNIQ_7247993FF639F774E7927C74444F97DD', 'campaign_id', 'email', 'phone', unique=True),
+    )
+
+    id = Column(INTEGER(11), primary_key=True)
+    campaign_id = Column(ForeignKey('action.id'), index=True)
+    email = Column(String(255, 'utf8_unicode_ci'), nullable=False)
+    phone = Column(String(255, 'utf8_unicode_ci'), nullable=False)
+    created_at = Column(DateTime, nullable=False)
+
+    campaign = relationship('Action')
+
+
 t_campaign_store = Table(
     'campaign_store', metadata,
     Column('campaign_id', ForeignKey('action.id', ondelete='CASCADE'), primary_key=True, nullable=False, index=True),
@@ -289,6 +325,30 @@ class ConfirmationCode(Base):
     code = Column(String(255, 'utf8_unicode_ci'), nullable=False, index=True)
     expires_at = Column(DateTime, nullable=False)
     created_at = Column(DateTime, nullable=False)
+
+
+class ConstructorBlock(Base):
+    __tablename__ = 'constructor_block'
+
+    id = Column(INTEGER(11), primary_key=True)
+    type = Column(String(255, 'utf8_unicode_ci'), nullable=False)
+    properties = Column(LONGTEXT, nullable=False, comment='(DC2Type:json_array)')
+
+
+class ConstructorPage(Base):
+    __tablename__ = 'constructor_page'
+
+    id = Column(INTEGER(11), primary_key=True)
+    name = Column(String(255, 'utf8_unicode_ci'), nullable=False)
+    path = Column(String(250, 'utf8_unicode_ci'), nullable=False)
+
+
+class ConstructorSection(Base):
+    __tablename__ = 'constructor_section'
+
+    id = Column(INTEGER(11), primary_key=True)
+    name = Column(String(255, 'utf8_unicode_ci'), nullable=False)
+    path = Column(String(250, 'utf8_unicode_ci'), nullable=False)
 
 
 class Cv(Base):
@@ -406,9 +466,11 @@ class EventProperty(Base):
     name = Column(String(255, 'utf8_unicode_ci'), nullable=False)
     description = Column(LONGTEXT)
     position = Column(SMALLINT(6))
+    ticket_id = Column(ForeignKey('ev_ticket.id'), index=True)
 
     event = relationship('EvEvent')
     image = relationship('File')
+    ticket = relationship('EvTicket')
 
 
 class EventPropertyAudit(Base):
@@ -447,8 +509,10 @@ class EventSchedule(Base):
     title = Column(LONGTEXT, nullable=False)
     description = Column(LONGTEXT)
     position = Column(SMALLINT(6))
+    ticket_id = Column(ForeignKey('ev_ticket.id'), index=True)
 
     event = relationship('EvEvent')
+    ticket = relationship('EvTicket')
 
 
 class Faqcategory(Base):
@@ -896,6 +960,20 @@ class Log(Base):
     created_at = Column(DateTime, nullable=False)
 
 
+class LsContact(Base):
+    __tablename__ = 'ls_contact'
+
+    id = Column(INTEGER(11), primary_key=True)
+    flow_id = Column(ForeignKey('workflow.flow_id'), index=True)
+    contact_type = Column(String(255, 'utf8_unicode_ci'), nullable=False)
+    contact_hide = Column(String(255, 'utf8_unicode_ci'), nullable=False)
+    contact = Column(String(255, 'utf8_unicode_ci'), nullable=False)
+    contact_state = Column(String(255, 'utf8_unicode_ci'), nullable=False)
+    code = Column(String(255, 'utf8_unicode_ci'))
+
+    flow = relationship('Workflow')
+
+
 class MacroRegion(Base):
     __tablename__ = 'macro_region'
 
@@ -958,6 +1036,19 @@ class MobBanner(Base):
     period_end = Column(DateTime)
 
     image = relationship('File')
+
+
+class Network(Base):
+    __tablename__ = 'networks'
+
+    id = Column(INTEGER(11), primary_key=True)
+    icon_id = Column(ForeignKey('file.id', ondelete='SET NULL'), index=True)
+    campaign_id = Column(ForeignKey('action.id', ondelete='CASCADE'), index=True)
+    link = Column(LONGTEXT)
+    position = Column(SMALLINT(6))
+
+    campaign = relationship('Action')
+    icon = relationship('File')
 
 
 class Office(Base):
@@ -1246,10 +1337,12 @@ class Product(Base):
     properties_block_title = Column(String(255, 'utf8_unicode_ci'))
     properties_block_description = Column(LONGTEXT)
     image_url = Column(String(255, 'utf8_unicode_ci'))
+    lterm_id = Column(ForeignKey('product_loyalty_term.id', ondelete='CASCADE'), unique=True)
 
     category = relationship('ProductCategory')
     image = relationship('File')
     label = relationship('Label')
+    lterm = relationship('ProductLoyaltyTerm')
     promotion = relationship('Action')
     stores = relationship('Store', secondary='product_store')
 
@@ -1282,6 +1375,19 @@ class ProductGroup(Base):
     group_id = Column(INTEGER(11))
 
     image = relationship('File')
+
+
+class ProductLoyaltyTerm(Base):
+    __tablename__ = 'product_loyalty_term'
+
+    id = Column(INTEGER(11), primary_key=True)
+    reward_type_id = Column(String(255, 'utf8_unicode_ci'))
+    reward_value_loyalty = Column(String(255, 'utf8_unicode_ci'))
+    plan_coupon_issue_count = Column(INTEGER(11))
+    plan_coupon_use_count = Column(INTEGER(11))
+    loyalty_trigger_condition = Column(String(255, 'utf8_unicode_ci'))
+    reward_img = Column(String(255, 'utf8_unicode_ci'))
+    reward_name_for_guest = Column(String(255, 'utf8_unicode_ci'))
 
 
 class ProductProperty(Base):
@@ -1326,12 +1432,19 @@ class Promo(Base):
     video = Column(String(255, 'utf8_unicode_ci'))
     details_button = Column(TINYINT(1), nullable=False)
     location_display_type = Column(SMALLINT(6), server_default=text("'1'"))
+    image_background_id = Column(ForeignKey('file.id', ondelete='SET NULL'), index=True)
+    image_main_id = Column(ForeignKey('file.id', ondelete='SET NULL'), index=True)
+    image_text_id = Column(ForeignKey('file.id', ondelete='SET NULL'), index=True)
+    animation_type = Column(String(255, 'utf8_unicode_ci'))
 
     campaign = relationship('Action', primaryjoin='Promo.campaign_id == Action.id')
+    image_background = relationship('File', primaryjoin='Promo.image_background_id == File.id')
     image_full = relationship('File', primaryjoin='Promo.image_full_id == File.id')
     image = relationship('File', primaryjoin='Promo.image_id == File.id')
+    image_main = relationship('File', primaryjoin='Promo.image_main_id == File.id')
     image_middle = relationship('File', primaryjoin='Promo.image_middle_id == File.id')
     image_small = relationship('File', primaryjoin='Promo.image_small_id == File.id')
+    image_text = relationship('File', primaryjoin='Promo.image_text_id == File.id')
     promotion = relationship('Action', primaryjoin='Promo.promotion_id == Action.id')
     stores = relationship('Store', secondary='promo_store')
 
@@ -1398,6 +1511,18 @@ class Qrlink(Base):
     google_play_link_source = Column(LONGTEXT)
     slug = Column(String(128, 'utf8_unicode_ci'), nullable=False, unique=True)
     description = Column(String(255, 'utf8_unicode_ci'), nullable=False, server_default=text("'promo text'"))
+
+
+class SectionPage(Base):
+    __tablename__ = 'section_page'
+
+    id = Column(INTEGER(11), primary_key=True)
+    page_id = Column(ForeignKey('constructor_page.id'), index=True)
+    section_id = Column(ForeignKey('constructor_section.id'), index=True)
+    position = Column(SMALLINT(6))
+
+    page = relationship('ConstructorPage')
+    section = relationship('ConstructorSection')
 
 
 class ShortUrl(Base):
@@ -1569,6 +1694,8 @@ class TicketUser(Base):
     send_to_email = Column(TINYINT(1), nullable=False, server_default=text("'0'"))
     card = Column(String(255, 'utf8_unicode_ci'))
     is_authorized = Column(TINYINT(1), nullable=False, server_default=text("'1'"))
+    basket_guid = Column(String(255, 'utf8_unicode_ci'))
+    basket_expires_at = Column(DateTime)
 
 
 class UpdateFromFile(Base):
@@ -1619,6 +1746,20 @@ class Workflow(Base):
     registarte_data = Column(LONGTEXT, comment='(DC2Type:array)')
     access_email_id = Column(INTEGER(11))
     business_card_id = Column(INTEGER(11))
+    is_published = Column(TINYINT(1), nullable=False)
+
+
+class WorkflowAudit(Base):
+    __tablename__ = 'workflow_audit'
+
+    id = Column(INTEGER(10), primary_key=True)
+    type = Column(String(10, 'utf8_unicode_ci'), nullable=False, index=True)
+    object_id = Column(INTEGER(10), nullable=False, index=True)
+    diffs = Column(LONGTEXT, comment='(DC2Type:json_array)')
+    blame_id = Column(INTEGER(10), index=True)
+    blame_user = Column(String(100, 'utf8_unicode_ci'))
+    ip = Column(String(45, 'utf8_unicode_ci'))
+    created_at = Column(DateTime, nullable=False, index=True)
 
 
 class Zone(Base):

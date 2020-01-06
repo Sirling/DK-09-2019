@@ -9,7 +9,7 @@ from Silpo.src.back.DB import DataBase
 
 connection_info = {
     'drivername': 'mysql+pymysql',
-    'DB': 'db_newsilpo_dev1',
+    'database': 'db_newsilpo_dev1',
     'host': '10.10.16.202',
     'port': '3306',
     'username': 'a-b.shvets',
@@ -18,7 +18,7 @@ connection_info = {
 # Создание урла подключения
 url = URL(**connection_info)
 # Файл метаданных
-file = "..\\DataBase.py"
+file = "C:\\Work\\Projects\\DK-09-2019\\Silpo\\src\\back\\DB\\DataBase.py"
 # Создание файла с метаданными базы
 os.system('sqlacodegen --outfile {} {}'.format(file, url))
 

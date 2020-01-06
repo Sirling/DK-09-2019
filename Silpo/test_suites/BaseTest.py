@@ -1,13 +1,13 @@
 from abc import ABC, abstractmethod
 from selenium.webdriver.support.wait import WebDriverWait
-from Python.test_data.driver_container import driver
+from Silpo.utils.Driver import Driver
 
 
 class BaseTest(ABC):
 
-    driver = driver
-    # кастомный вейт
+    driver = Driver().driver
     wait = WebDriverWait(driver, 5)
+
 
     @abstractmethod
     def preconditions(self):
@@ -18,7 +18,7 @@ class BaseTest(ABC):
         pass
 
     @abstractmethod
-    def test(self):
+    def execution_test(self):
         """
         Абстрактный метод
         Выполнение теста

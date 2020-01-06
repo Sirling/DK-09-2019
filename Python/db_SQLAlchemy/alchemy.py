@@ -8,7 +8,7 @@ import os
 # Урл подключения
 connection_info = {
     'drivername': 'mysql+pymysql',
-    'DB': 'db_newsilpo_dev1',
+    'database': 'db_newsilpo_dev1',
     'host': '10.10.16.202',
     'port': '3306',
     'username': 'a-b.shvets',

@@ -39,6 +39,7 @@ def select_product_and_store():
         .filter(Store.title.like("%Тор%"))\
         .group_by(Product.title)\
         .limit(10)
+    print(result)
     for row in result:
         print(row)
 
